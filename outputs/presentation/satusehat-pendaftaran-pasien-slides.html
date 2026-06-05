@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SATUSEHAT Pendaftaran Pasien</title>
+  <style>
+    :root {
+      --ink: #13201f;
+      --muted: #657371;
+      --line: #d7dfdc;
+      --paper: #f7f7f2;
+      --panel: #ffffff;
+      --green: #177d62;
+      --teal: #0d5f72;
+      --amber: #d49627;
+      --red: #b94b42;
+      --blue: #2f61a6;
+      --shadow: 0 18px 50px rgba(24, 33, 31, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #202523;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    .deck {
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .slide {
+      width: min(1280px, calc(100vw - 48px));
+      aspect-ratio: 16 / 9;
+      display: none;
+      position: relative;
+      overflow: hidden;
+      background: var(--paper);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 58px 68px;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--green), var(--teal), var(--amber));
+    }
+
+    .kicker {
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 940px;
+      font-size: 66px;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      max-width: 980px;
+      font-size: 44px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    p, li {
+      font-size: 21px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    ul {
+      margin: 20px 0 0;
+      padding-left: 22px;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, monospace;
+      background: #eef2ef;
+      color: #173b35;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 0.9em;
+    }
+
+    .title-grid {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .title-card {
+      border-left: 7px solid var(--green);
+      padding-left: 26px;
+    }
+
+    .meta {
+      margin-top: 34px;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 20px;
+    }
+
+    .hero-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 28px;
+      min-height: 390px;
+      display: grid;
+      align-content: center;
+      gap: 16px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .box {
+      min-height: 145px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+    }
+
+    .box strong {
+      display: block;
+      color: var(--ink);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .box p {
+      font-size: 18px;
+    }
+
+    .flow {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .step {
+      min-height: 168px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      position: relative;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      background: var(--green);
+      color: #fff;
+      border-radius: 50%;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .step h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .table {
+      margin-top: 30px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 220px 1fr 280px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .cell {
+      padding: 15px 18px;
+      font-size: 17px;
+      color: var(--muted);
+      border-right: 1px solid var(--line);
+    }
+
+    .cell:last-child {
+      border-right: 0;
+    }
+
+    .head .cell {
+      background: #eaf2ee;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .code-block {
+      margin-top: 28px;
+      background: #17201d;
+      color: #d9eee6;
+      border-radius: 8px;
+      padding: 22px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 18px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .code-block.compact {
+      font-size: 15px;
+      line-height: 1.42;
+      max-height: 390px;
+      overflow: hidden;
+    }
+
+    .screen-layout {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .screenshot {
+      background: #111;
+      border-radius: 8px;
+      border: 1px solid #28332f;
+      overflow: hidden;
+      min-height: 405px;
+      display: grid;
+      place-items: center;
+    }
+
+    .screenshot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .proof-list {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .proof-list li {
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 11px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #e7f4ee;
+      color: var(--green);
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .footer {
+      position: absolute;
+      left: 68px;
+      right: 68px;
+      bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      color: #7b8582;
+      font-size: 14px;
+    }
+
+    .nav {
+      position: fixed;
+      right: 28px;
+      bottom: 24px;
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      background: #f8faf8;
+      color: #15201d;
+      font-weight: 800;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .counter {
+      position: fixed;
+      left: 28px;
+      bottom: 28px;
+      color: #fff;
+      font-weight: 800;
+      z-index: 20;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;
+      }
+
+      .deck {
+        height: auto;
+        padding: 12px;
+      }
+
+      .slide {
+        width: 100%;
+        min-height: 100vh;
+        aspect-ratio: auto;
+        padding: 38px 26px 86px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      h2 {
+        font-size: 32px;
+      }
+
+      .title-grid,
+      .grid-2,
+      .grid-3,
+      .flow,
+      .screen-layout,
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        left: 26px;
+        right: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide active">
+      <div class="title-grid">
+        <div class="title-card">
+          <div class="kicker">Tugas Backend API SATUSEHAT</div>
+          <h1>Simulasi Pendaftaran Kunjungan Pasien</h1>
+          <div class="meta">
+            <span>Implementasi alur OAuth2, master data, Location, dan Encounter</span>
+            <span>Environment: SATUSEHAT Sandbox / Staging</span>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <h3>Output yang Dibuktikan</h3>
+          <p>Backend berhasil membuat resource <code>Encounter</code> dan menerima response <code>201 Created</code> dari server SATUSEHAT.</p>
+          <div class="badge-row">
+            <span class="badge">Node.js</span>
+            <span class="badge">Express</span>
+            <span class="badge">FHIR R4</span>
+            <span class="badge">Postman</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>SATUSEHAT Pendaftaran Pasien</span><span>01</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Tujuan Tugas</div>
+      <h2>Membangun backend sederhana untuk menjalankan alur pendaftaran pasien ke SATUSEHAT.</h2>
+      <div class="grid-3">
+        <div class="box">
+          <strong>Integrasi</strong>
+          <p>Menghubungkan aplikasi lokal ke API SATUSEHAT menggunakan token OAuth2.</p>
+        </div>
+        <div class="box">
+          <strong>Master Data</strong>
+          <p>Mengambil IHS Number pasien dan dokter berdasarkan NIK dummy yang tersedia.</p>
+        </div>
+        <div class="box">
+          <strong>Registrasi Kunjungan</strong>
+          <p>Membuat Location dan Encounter dengan status kunjungan <code>arrived</code>.</p>
+        </div>
+      </div>
+      <div class="footer"><span>Tujuan dan lingkup</span><span>02</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Alur Sistem</div>
+      <h2>Request dijalankan berurutan karena setiap langkah menghasilkan ID untuk langkah berikutnya.</h2>
+      <div class="flow">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>OAuth2</h3>
+          <p>Mengambil access token dari server SATUSEHAT.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Patient</h3>
+          <p>Mencari IHS pasien dari NIK dummy.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Practitioner</h3>
+          <p>Mencari ID dokter dari NIK sandbox valid.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <h3>Location</h3>
+          <p>Membuat ruangan poli untuk lokasi kunjungan.</p>
+        </div>
+        <div class="step">
+          <div class="num">5</div>
+          <h3>Encounter</h3>
+          <p>Mendaftarkan kunjungan pasien ke SATUSEHAT.</p>
+        </div>
+      </div>
+      <div class="footer"><span>Urutan request</span><span>03</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Endpoint Backend Lokal</div>
+      <h2>Backend menyediakan endpoint yang mudah diuji dari Postman.</h2>
+      <div class="table">
+        <div class="row head">
+          <div class="cell">Endpoint</div>
+          <div class="cell">Fungsi</div>
+          <div class="cell">Output utama</div>
+        </div>
+        <div class="row">
+          <div class="cell"><code>GET /auth/token</code></div>
+          <div class="cell">Mengambil access token OAuth2.</div>
+          <div class="cell"><code>access_token</code></div>
+        </div>
+        <div class="row">
+          <div class="cell"><code>GET /master/patient/:nik</code></div>
+          <div class="cell">Mencari pasien berdasarkan NIK.</div>
+          <div class="cell"><code>patient_id</code></div>
+        </div>
+        <div class="row">
+          <div class="cell"><code>POST /registration-flow</code></div>
+          <div class="cell">Menjalankan alur lengkap sampai Encounter.</div>
+          <div class="cell"><code>encounter_id</code></div>
+        </div>
+      </div>
+      <div class="footer"><span>Backend dan API docs</span><span>04</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Payload FHIR R4</div>
+      <h2>Payload Encounter mengikuti struktur FHIR R4 yang dibutuhkan untuk kunjungan rawat jalan.</h2>
+      <div class="grid-2">
+        <div class="box">
+          <strong>Status kunjungan</strong>
+          <p><code>status: arrived</code> menunjukkan pasien sudah tiba.</p>
+        </div>
+        <div class="box">
+          <strong>Kelas kunjungan</strong>
+          <p><code>class: AMB</code> digunakan untuk ambulatory atau rawat jalan.</p>
+        </div>
+        <div class="box">
+          <strong>Relasi resource</strong>
+          <p>Encounter menghubungkan Patient, Practitioner, Location, dan Organization.</p>
+        </div>
+        <div class="box">
+          <strong>Timestamp</strong>
+          <p>Waktu request dikirim dengan format ISO 8601 UTC.</p>
+        </div>
+      </div>
+      <div class="footer"><span>FHIR R4</span><span>05</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Penyesuaian Sandbox</div>
+      <h2>Beberapa data pada slide tugas perlu disesuaikan agar valid di SATUSEHAT Sandbox.</h2>
+      <div class="grid-2">
+        <div class="box">
+          <strong>NIK dokter</strong>
+          <p>NIK <code>1000000000000002</code> tidak ditemukan, sehingga digunakan NIK sandbox valid <code>7209061211900001</code>.</p>
+        </div>
+        <div class="box">
+          <strong>Organization ID</strong>
+          <p>Encounter memakai Organization UUID dari credential resmi: <code>54c5b7a4-bab5-4c0c-99b2-66d076a3abb1</code>.</p>
+        </div>
+        <div class="box">
+          <strong>Location identifier</strong>
+          <p>Field <code>Location.identifier</code> tidak dikirim karena ditolak oleh rule sandbox.</p>
+        </div>
+        <div class="box">
+          <strong>Token cache</strong>
+          <p>Access token di-cache agar tidak terkena rate limit autentikasi.</p>
+        </div>
+      </div>
+      <div class="footer"><span>Catatan implementasi</span><span>06</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Error Handling</div>
+      <h2>Backend menampilkan error dasar agar proses debugging lebih jelas.</h2>
+      <div class="grid-3">
+        <div class="box">
+          <strong>401 Unauthorized</strong>
+          <p>Token tidak valid atau sudah kedaluwarsa.</p>
+        </div>
+        <div class="box">
+          <strong>404 Not Found</strong>
+          <p>Pasien atau dokter tidak ditemukan berdasarkan NIK.</p>
+        </div>
+        <div class="box">
+          <strong>400 Bad Request</strong>
+          <p>Payload tidak sesuai validasi SATUSEHAT, misalnya Organization ID salah.</p>
+        </div>
+      </div>
+      <div class="code-block">Contoh response:
+{
+  "status": 404,
+  "error": "Dokter dengan NIK ... tidak ditemukan"
+}</div>
+      <div class="footer"><span>Error handling</span><span>07</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Cuplikan Source Code</div>
+      <h2>Source code dipisah agar konfigurasi, server, dan client SATUSEHAT mudah dicek.</h2>
+      <div class="grid-3">
+        <div class="box">
+          <strong><code>src/config.js</code></strong>
+          <p>Membaca `.env`, base URL SATUSEHAT, credential, Organization ID, dan mode real/mock.</p>
+        </div>
+        <div class="box">
+          <strong><code>src/server.js</code></strong>
+          <p>Menyediakan endpoint lokal untuk Postman dan mengembalikan error yang mudah dibaca.</p>
+        </div>
+        <div class="box">
+          <strong><code>src/satusehatClient.js</code></strong>
+          <p>Menjalankan request token, Patient, Practitioner, Location, dan Encounter.</p>
+        </div>
+      </div>
+      <div class="code-block compact">app.post("/registration-flow", async (req, res, next) =&gt; {
+  try {
+    const result = await runRegistrationFlow(req.body);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+});</div>
+      <div class="footer"><span>Source code</span><span>08</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Flow Utama di Backend</div>
+      <h2>Backend menjalankan semua langkah tugas secara berurutan sampai mendapatkan Encounter ID.</h2>
+      <div class="code-block compact">const tokenResponse = await getAccessToken();
+const token = tokenResponse.access_token;
+
+const patient = await findPatientByNik(token, patientNik);
+const practitioner = await findPractitionerByNik(token, practitionerNik);
+
+const location = await createLocation(token, locationPayload);
+const encounter = await createEncounter(token, encounterPayload);
+
+return {
+  patient_id: patient.id,
+  practitioner_id: practitioner.id,
+  location_id: location.id,
+  encounter_id: encounter.id
+};</div>
+      <div class="grid-3">
+        <div class="box">
+          <strong>Token</strong>
+          <p>Access token diambil dari OAuth2 dan di-cache agar tidak terkena rate limit.</p>
+        </div>
+        <div class="box">
+          <strong>ID Resource</strong>
+          <p>ID dari Patient, Practitioner, dan Location dipakai untuk membentuk Encounter.</p>
+        </div>
+        <div class="box">
+          <strong>Output</strong>
+          <p>Response akhir menampilkan <code>encounter_id</code> sebagai bukti pendaftaran berhasil.</p>
+        </div>
+      </div>
+      <div class="footer"><span>Implementasi flow</span><span>09</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Bukti Berhasil</div>
+      <h2>POST Encounter berhasil dibuat dengan response <span class="status">201 Created</span>.</h2>
+      <div class="screen-layout">
+        <div class="screenshot">
+          <img src="assets/encounter-201-created.png" alt="Screenshot Postman 201 Created">
+        </div>
+        <div class="proof-list">
+          <h3>Bagian yang perlu terlihat saat screenshot manual</h3>
+          <ul>
+            <li>Status response: <code>201 Created</code></li>
+            <li><code>patient_id</code></li>
+            <li><code>practitioner_id</code></li>
+            <li><code>location_id</code></li>
+            <li><code>service_provider_id</code></li>
+            <li><code>encounter_id</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer"><span>Evidence</span><span>10</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Deliverables</div>
+      <h2>Luaran tugas sudah disiapkan dalam folder proyek dan repository GitHub.</h2>
+      <div class="grid-3">
+        <div class="box">
+          <strong>Source Code</strong>
+          <p><code>src/server.js</code>, <code>src/satusehatClient.js</code>, dan konfigurasi Node.js.</p>
+        </div>
+        <div class="box">
+          <strong>Dokumentasi API</strong>
+          <p>Postman collection untuk request backend lokal.</p>
+        </div>
+        <div class="box">
+          <strong>Screenshot</strong>
+          <p>Bukti response SATUSEHAT <code>201 Created</code> yang menampilkan <code>encounter_id</code>.</p>
+        </div>
+      </div>
+      <div class="code-block">Repository:
+github.com/hafidzrizqullahprasetya/satusehat-pendaftaran-pasien</div>
+      <div class="footer"><span>Penutup</span><span>11</span></div>
+    </section>
+  </main>
+
+  <div class="counter" id="counter">1 / 11</div>
+  <div class="nav">
+    <button type="button" id="prev">Prev</button>
+    <button type="button" id="next">Next</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const counter = document.querySelector("#counter");
+    let index = 0;
+
+    function showSlide(nextIndex) {
+      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("active", slideIndex === index);
+      });
+      counter.textContent = `${index + 1} / ${slides.length}`;
+    }
+
+    document.querySelector("#prev").addEventListener("click", () => showSlide(index - 1));
+    document.querySelector("#next").addEventListener("click", () => showSlide(index + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === " ") showSlide(index + 1);
+      if (event.key === "ArrowLeft") showSlide(index - 1);
+    });
+  </script>
+</body>
+</html>
