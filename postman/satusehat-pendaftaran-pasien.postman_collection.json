@@ -1,0 +1,78 @@
+{
+  "info": {
+    "name": "SATUSEHAT Pendaftaran Pasien",
+    "description": "Collection untuk menjalankan alur tugas: token, pencarian pasien, pencarian dokter, pembuatan Location, dan pembuatan Encounter melalui backend lokal.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "patient_nik",
+      "value": "1000000000000001"
+    },
+    {
+      "key": "practitioner_nik",
+      "value": "7209061211900001"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. OAuth Token",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/auth/token"
+      }
+    },
+    {
+      "name": "2. Cari IHS Number Pasien",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/master/patient/{{patient_nik}}"
+      }
+    },
+    {
+      "name": "3. Cari IHS Number Dokter",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/master/practitioner/{{practitioner_nik}}"
+      }
+    },
+    {
+      "name": "4. Buat Location",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ruang Poli Umum\"\n}"
+        },
+        "url": "{{base_url}}/locations"
+      }
+    },
+    {
+      "name": "5. Jalankan Alur Lengkap sampai Encounter",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"patientNik\": \"{{patient_nik}}\",\n  \"practitionerNik\": \"{{practitioner_nik}}\",\n  \"locationName\": \"Ruang Poli Umum\"\n}"
+        },
+        "url": "{{base_url}}/registration-flow"
+      }
+    }
+  ]
+}
